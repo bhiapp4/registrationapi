@@ -23,7 +23,7 @@ exports.register = function(server, options, next){
     method: 'GET',
     path: '/courses/{courseId}',
     handler: function (request, reply) {
-      db.courses.findOne({courseId: request.params.courseId}, (err, doc) => {
+      db.courses.findOne({_id: request.params.courseId}, (err, doc) => {
           if (err) {
               return reply(Boom.wrap(err, 'Internal MongoDB error'));
           }
@@ -51,7 +51,7 @@ exports.register = function(server, options, next){
     config: {
         validate: {
             payload: {
-              courseId: Joi.string().min(5).max(5).required(),
+              _id: Joi.string().min(5).max(5).required(),
               name: Joi.string().min(10).max(50).required()
             }
         }
@@ -63,7 +63,7 @@ exports.register = function(server, options, next){
     path: '/courses/{courseId}',
     handler: function (request, reply) {
         db.courses.remove({
-            courseId: request.params.courseId
+            _id: request.params.courseId
         }, function (err, result) {
             if (err) {
                return reply(Boom.wrap(err, 'Internal MongoDB error'));
@@ -80,7 +80,7 @@ exports.register = function(server, options, next){
     method: 'PATCH',
     path: '/courses/{courseId}',
     handler: function (request, reply) {
-        db.courses.update({courseId: request.params.courseId},
+        db.courses.update({_id: request.params.courseId},
           {
             $set: request.payload
           }, function (err, result) {
@@ -96,7 +96,6 @@ exports.register = function(server, options, next){
     config: {
         validate: {
             payload: Joi.object({
-              courseId: Joi.string().min(5).max(5).required(),
               name: Joi.string().min(10).max(50).required()
             }).required().min(1)
         }
